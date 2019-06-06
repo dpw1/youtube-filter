@@ -1,0 +1,46 @@
+.youtubeFilter {
+  position: fixed;
+  bottom: 0;
+  z-index: 1000;
+  width: 100%;
+  background: #fafafa;
+  text-align: center;
+
+  font-size: 15px;
+  max-width: 800px;
+  border: 1px solid #bbbbbb;
+  border-bottom: unset;
+  padding: 10px 0;
+}
+
+.youtubeFilter label {
+  display: none;
+}
+.youtubeFilter input {
+  max-width: 70px;
+  display: inline-block;
+}
+.youtubeFilter__text {
+  display: inline-block;
+}
+
+.youtubeFilter--remove-video {
+  transition: all 0.45s;
+  animation: scale-out-vertical 0.45s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+  animation-fill-mode: forwards;
+}
+
+@keyframes scale-out-vertical {
+  0% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    opacity: 1;
+    max-height: 138px;
+  }
+  100% {
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    opacity: 0;
+    max-height: 0px;
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Youtube Filter",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "Coded by Diego Fortes.",
+  "homepage_url": "http://diegofortes.com",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "page": "src/bg/background.html",
+    "persistent": true
+  },
+  "permissions": ["https://*/*", "http://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/results*"],
+      "js": ["src/inject/inject.js"],
+      "css": ["src/css/custom.css"]
+    }
+  ]
+}
