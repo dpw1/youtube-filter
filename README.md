@@ -11,7 +11,7 @@ For instance, filtering by 1:00 and 3:00 will exclude videos below 1 minute and 
 ## Features
 
 - Real-time filtering
-- Loaded only at youtube search page
+- Loaded only at youtube search page to keep your browsing experience fast
 - Simple yet user friendly interface
 - Removed videos are subtly animated
 
