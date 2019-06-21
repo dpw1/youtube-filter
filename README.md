@@ -2,6 +2,8 @@
 
 ![Youtube Filter](/youtube-filter-gif.gif)
 
+[Download it for free on Chrome Extension Store](https://chrome.google.com/webstore/detail/youtube-time-filter/bafpllbamajknogcdbecmgflnbmdbbep)
+
 Simple Chrome extension to filter videos by length.
 
 For instance, filtering by 1:00 and 3:00 will exclude videos below 1 minute and longer than 3 minutes.
