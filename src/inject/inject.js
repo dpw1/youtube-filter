@@ -131,7 +131,13 @@ chrome.extension.sendMessage({}, function(response) {
         const reloadFilter = _ => {
           waitUntilElementExists("#spinnerContainer.active", _ => {
             const cls = "#contents > ytd-item-section-renderer > #contents";
-
+            setTimeout(() => {
+              // const info =
+              //   window.ytInitialData.contents.twoColumnSearchResultsRenderer
+              //     .primaryContents.sectionListRenderer.contents[0]
+              //     .itemSectionRenderer.contents;
+              console.log(window.yt);
+            }, 1);
             observeDOM(document.querySelector(cls), () => filterVideos(false));
           });
         };
