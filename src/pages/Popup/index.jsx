@@ -4,4 +4,10 @@ import { render } from 'react-dom';
 import Popup from './Popup';
 import './index.css';
 
-render(<Popup />, window.document.querySelector('#app-container'));
+import ThemeProvider from './contexts/ThemeContext';
+render(
+  <ThemeProvider>
+    <Popup />
+  </ThemeProvider>,
+  window.document.querySelector('#app-container')
+);
