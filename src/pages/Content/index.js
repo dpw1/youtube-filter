@@ -146,7 +146,7 @@ window.ytFilter = (function () {
       console.log(`bug fetching, tried again: ${processedJSON}`);
     }
 
-    const min = _convertToSeconds('1:00');
+    const min = _convertToSeconds('2:00');
     const max = _convertToSeconds('3:00');
 
     for (const [i, each] of processedJSON.entries()) {
