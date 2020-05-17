@@ -132,11 +132,7 @@ window.ytFilter = (function () {
     });
   }
 
-  function _sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  async function resetLocalStorageItems() {
+  async function resetScrollLimitToHideVideos() {
     localStorage.setItem('scrolledDistance', 1);
   }
 
@@ -150,9 +146,7 @@ window.ytFilter = (function () {
     }
 
     const min = _convertToSeconds('1:00');
-    const max = _convertToSeconds('2:00');
-
-    // console.log(processedJSON);
+    const max = _convertToSeconds('3:00');
 
     for (const [i, each] of processedJSON.entries()) {
       let time;
@@ -172,13 +166,11 @@ window.ytFilter = (function () {
           return;
         }
 
+        /**
+         * Removes all hidden videos by video id
+         */
+
         if (!keepVideoOnTheList || !time) {
-          //   console.log(
-          //     "REMOVING: ",
-          //     time,
-          //     id,
-          //     `keep video? ${keepVideoOnTheList}`,
-          //   );
           setTimeout(() => {
             const el = document.querySelector(`[href*='${id}'][rel]`);
 
@@ -214,33 +206,31 @@ window.ytFilter = (function () {
   }
 
   async function handlePageChange(request, sender) {
-    console.log('location changed!');
-
     const currentURL = request.tab.url;
     const previousURL = localStorage.getItem('previousURL');
 
-    if (currentURL !== previousURL) {
-      console.log(
-        'this page is different than the previous one. Saving to local storage.'
-      );
+    console.log('request from tab: ', request.tab);
+
+    if (currentURL === previousURL) {
+      console.log('Same page as previous one: ', previousURL);
+    } else if (currentURL !== previousURL && _isSearchPage()) {
+      console.log('New page.');
+
       localStorage.setItem('previousURL', currentURL);
-      window.location.reload();
-    } else {
-      console.log('this page is the same as the previous one.');
-    }
 
-    console.log(currentURL, previousURL);
+      if (request.tab.openerTabId) {
+        console.log('reload this tab:', request);
 
-    if (_isSearchPage()) {
-      printLine('this is the search page!');
-    } else if (!_isSearchPage()) {
-      return printLine('not the search page!');
+        chrome.runtime.sendMessage({ tabIdToReload: request.tab.id });
+      } else if (!request.tab.openerTabId) {
+        window.location.reload();
+      }
     }
 
     if (_isSearchPage()) {
       console.log('** SEARCH PAGE LOADED **');
 
-      resetLocalStorageItems();
+      resetScrollLimitToHideVideos();
       hideVideos();
       window.onscroll = function (e) {
         hideVideosOnScroll();
@@ -251,26 +241,8 @@ window.ytFilter = (function () {
   return {
     init: function () {
       window.onload = function () {
-        // const currentPageLocalStorage = 'ytFilterCurrentPage';
-        // const previousURL = localStorage.getItem(currentPageLocalStorage);
-        // if (!_isSearchPage()) {
-        //   localStorage.removeItem(currentPageLocalStorage);
-        //   return;
-        // }
-        // console.log(currentPageLocalStorage, request.tab.url);
-        // if (
-        //   request.tab.status === 'complete' &&
-        //   previousURL !== request.tab.url
-        // ) {
-        //   window.location.reload();
-        //   return localStorage.setItem(
-        //     currentPageLocalStorage,
-        //     window.location.href
-        //   );
-        // }
-
         chrome.runtime.onMessage.addListener((request, sender) => {
-          handlePageChange(request, sender);
+          setTimeout(handlePageChange(request, sender), 50);
         });
       };
     },

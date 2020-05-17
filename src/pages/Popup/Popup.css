@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.time-filter {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.time-filter-fieldset {
+  display: flex;
+  /* flex-wrap: wrap-reverse; */
+  /* flex-direction: row; */
+}
+
+.time-filter-item {
+  flex-grow: 1;
+}

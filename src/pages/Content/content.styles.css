@@ -1,0 +1,18 @@
+/* Hide all channels 
+================================= */
+
+ytd-channel-renderer {
+  display: none !important;
+}
+
+/* Hide all playlists
+================================= */
+ytd-playlist-renderer {
+  display: none !important;
+}
+
+/* Hide all related suggestions
+================================= */
+ytd-horizontal-card-list-renderer {
+  display: none !important;
+}
