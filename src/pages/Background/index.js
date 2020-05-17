@@ -8,6 +8,7 @@ window.onload = function () {
   chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (changeInfo.status === 'complete') {
       console.log(changeInfo);
+
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const currTab = tabs[0];
 
@@ -24,7 +25,8 @@ window.onload = function () {
 
   chrome.runtime.onMessage.addListener((request, sender, resp) => {
     console.log(request, sender, resp());
-    console.log('reloading new page!');
+
+    /** Takes care of reloading new page when video is selected */
     chrome.tabs.reload(sender.tab.id);
   });
 };

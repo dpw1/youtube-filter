@@ -133,6 +133,7 @@ window.ytFilter = (function () {
   }
 
   async function resetScrollLimitToHideVideos() {
+    // TODO: do math without relying on cookies
     localStorage.setItem('scrolledDistance', 1);
   }
 
@@ -185,22 +186,14 @@ window.ytFilter = (function () {
     }
   }
 
-  async function hideVideosOnScroll() {
+  async function hideVideosOnScroll(id) {
     let updateEveryYPixelsScrolled = 60; //every Y pixels scrolled will update videos
 
-    let totalScrolled = localStorage.getItem('scrolledDistance')
-      ? parseInt(localStorage.getItem('scrolledDistance'))
-      : 1;
-
-    let totalNeededToScrollToUpdateAgain =
-      updateEveryYPixelsScrolled * totalScrolled;
-
-    console.log(totalNeededToScrollToUpdateAgain);
-
-    if (window.scrollY >= totalNeededToScrollToUpdateAgain) {
+    if (
+      window.scrollY % updateEveryYPixelsScrolled >=
+      updateEveryYPixelsScrolled / 2
+    ) {
       console.log('updating on scroll!');
-      let amount = (totalScrolled += 1);
-      localStorage.setItem('scrolledDistance', parseInt(amount));
       hideVideos();
     }
   }
@@ -209,18 +202,10 @@ window.ytFilter = (function () {
     const currentURL = request.tab.url;
     const previousURL = localStorage.getItem('previousURL');
 
-    console.log('request from tab: ', request.tab);
-
-    if (currentURL === previousURL) {
-      console.log('Same page as previous one: ', previousURL);
-    } else if (currentURL !== previousURL && _isSearchPage()) {
-      console.log('New page.');
-
+    if (currentURL !== previousURL && _isSearchPage()) {
       localStorage.setItem('previousURL', currentURL);
 
       if (request.tab.openerTabId) {
-        console.log('reload this tab:', request);
-
         chrome.runtime.sendMessage({ tabIdToReload: request.tab.id });
       } else if (!request.tab.openerTabId) {
         window.location.reload();
@@ -233,7 +218,7 @@ window.ytFilter = (function () {
       resetScrollLimitToHideVideos();
       hideVideos();
       window.onscroll = function (e) {
-        hideVideosOnScroll();
+        hideVideosOnScroll(request.tab.openerTabId);
       };
     }
   }
