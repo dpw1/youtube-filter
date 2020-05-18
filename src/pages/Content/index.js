@@ -1,7 +1,3 @@
-import { printLine } from './modules/print';
-
-printLine("Using the 'printLine' function from the Print Module");
-
 window.ytFilter = window.ytFilter || {};
 
 window.ytFilter = (function () {
@@ -132,6 +128,14 @@ window.ytFilter = (function () {
     });
   }
 
+  async function _getChromeStorageData() {
+    return new Promise(function (resolve, reject) {
+      chrome.storage.sync.get('data', function (result) {
+        resolve(result);
+      });
+    });
+  }
+
   async function resetScrollLimitToHideVideos() {
     // TODO: do math without relying on cookies
     localStorage.setItem('scrolledDistance', 1);
@@ -146,8 +150,15 @@ window.ytFilter = (function () {
       console.log(`bug fetching, tried again: ${processedJSON}`);
     }
 
-    const min = _convertToSeconds('2:00');
+    // TODO: get this data only once, not at every function call
+    const { data } = await _getChromeStorageData();
+
+    console.log(data);
+
+    const min = _convertToSeconds(data.from);
     const max = _convertToSeconds('3:00');
+
+    console.log('min', min);
 
     for (const [i, each] of processedJSON.entries()) {
       let time;
@@ -179,7 +190,13 @@ window.ytFilter = (function () {
               return;
             }
 
-            return el.closest('ytd-video-renderer').remove();
+            const parent = el.closest('ytd-video-renderer');
+
+            if (!parent) {
+              return;
+            }
+
+            return parent.remove();
           }, 50);
         }
       }

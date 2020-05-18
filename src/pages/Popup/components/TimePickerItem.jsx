@@ -11,26 +11,37 @@ function TimePickerItem(props) {
     defaultValue,
     onChange,
     errors,
+    rules,
+    clearError,
   } = props;
   return (
     <React.Fragment>
-      <Controller
-        className="time-filter-item"
-        as={
-          <Select
-            options={options}
-            defaultValue={defaultValue && defaultValue}
-          />
-        }
-        control={control}
-        placeholder={placeholder}
-        onChange={([selected]) => {
-          onChange(selected);
-          return selected;
-        }}
-        name={name}
-      />
-      {errors[name] && errors[name].message}
+      <div className="time-filter-item">
+        <Controller
+          style={{ border: `1px solid red` }}
+          as={
+            <Select
+              options={options}
+              defaultValue={defaultValue && defaultValue}
+            />
+          }
+          rules={rules}
+          control={control}
+          placeholder={placeholder}
+          defaultValue={defaultValue}
+          onChange={([selected]) => {
+            if (typeof onChange === 'function') {
+              onChange(selected);
+            }
+
+            // console.log(errors);
+
+            return selected;
+          }}
+          name={name}
+        />
+        {errors[name] && <span>{errors[name].message}</span>}
+      </div>
     </React.Fragment>
   );
 }

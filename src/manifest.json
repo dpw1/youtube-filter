@@ -28,6 +28,7 @@
   "permissions": [
     "tabs",
     "storage",
+    "activeTab",
     "browserAction",
     "https://*.youtube.com/*"
   ],
