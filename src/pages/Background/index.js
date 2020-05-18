@@ -5,7 +5,7 @@ console.log('This is the background page.');
 console.log('Put the background scripts here.');
 
 window.onload = function () {
-  /**  */
+  /** Disables icon if page is not youtube */
   chrome.tabs.onActivated.addListener(function (activeInfo) {
     chrome.tabs.get(activeInfo.tabId, (tab) => {
       if (!/youtube\.com/.test(tab.url)) {
@@ -17,8 +17,6 @@ window.onload = function () {
   /** Passes information of current page to Content */
   chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (changeInfo.status === 'complete') {
-      console.log(changeInfo);
-
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const currTab = tabs[0];
 
@@ -34,8 +32,6 @@ window.onload = function () {
   });
 
   chrome.runtime.onMessage.addListener((request, sender, resp) => {
-    console.log(request, sender, resp());
-
     /** Takes care of reloading new page when video is selected */
     chrome.tabs.reload(sender.tab.id);
   });
