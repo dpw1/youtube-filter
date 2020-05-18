@@ -25,7 +25,12 @@
     "icon-128.png",
     "icon-34.png"
   ],
-  "permissions": ["tabs", "activeTab", "webNavigation", "storage"],
+  "permissions": [
+    "tabs",
+    "storage",
+    "browserAction",
+    "https://*.youtube.com/*"
+  ],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

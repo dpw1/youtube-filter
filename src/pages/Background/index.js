@@ -5,6 +5,16 @@ console.log('This is the background page.');
 console.log('Put the background scripts here.');
 
 window.onload = function () {
+  /**  */
+  chrome.tabs.onActivated.addListener(function (activeInfo) {
+    chrome.tabs.get(activeInfo.tabId, (tab) => {
+      if (!/youtube\.com/.test(tab.url)) {
+        chrome.browserAction.disable(tab.id);
+      }
+    });
+  });
+
+  /** Passes information of current page to Content */
   chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (changeInfo.status === 'complete') {
       console.log(changeInfo);
