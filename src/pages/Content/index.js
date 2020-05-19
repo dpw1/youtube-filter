@@ -155,8 +155,12 @@ window.ytFilter = (function () {
 
     console.log(data);
 
-    const min = _convertToSeconds(data.from);
-    const max = _convertToSeconds('3:00');
+    const min = _convertToSeconds(
+      `${data.from.hours.value}:${data.from.minutes.value}:${data.from.seconds.value}`
+    );
+    const max = _convertToSeconds(
+      `${data.to.hours.value}:${data.to.minutes.value}:${data.to.seconds.value}`
+    );
 
     console.log('min', min);
 

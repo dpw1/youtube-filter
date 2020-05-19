@@ -1,22 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useForm, FormContext, useFormContext } from 'react-hook-form';
 import TimePickerItem from './TimePickerItem';
-import { generateTimeOptions } from './utils/utils';
+import {
+  generateTimeOptions,
+  minTwoDigits,
+  convertToSeconds,
+} from './utils/utils';
+import { ThemeContext } from '../contexts/ThemeContext';
+import ReactHtmlParser from 'react-html-parser';
 
 function TimePicker() {
   const methods = useForm();
-  const [options, setOptions] = useState();
-  const [data, setData] = useState();
+  const context = useContext(ThemeContext);
 
   const onSubmit = (data) => {
-    const from = `${data.fromHours.value}:${data.fromMinutes.value}:${data.fromSeconds.value}`;
+    // TODO: move this to content/index.js
 
-    console.log(from);
+    methods.clearError();
+
+    console.log(data);
+
     const cleanData = {
-      from,
+      from: {
+        hours: data.fromHours,
+        minutes: data.fromMinutes,
+        seconds: data.fromSeconds,
+        formatted: `${minTwoDigits(data.fromHours.value)}:${minTwoDigits(
+          data.fromMinutes.value
+        )}:${minTwoDigits(data.fromMinutes.value)}`,
+      },
+      to: {
+        hours: data.toHours,
+        minutes: data.toMinutes,
+        seconds: data.toSeconds,
+        formatted: `${minTwoDigits(data.toHours.value)}:${minTwoDigits(
+          data.toMinutes.value
+        )}:${minTwoDigits(data.toSeconds.value)}`,
+      },
     };
+
+    console.log('clean data: ', cleanData);
+
+    const from = convertToSeconds(cleanData.from.formatted);
+    const to = convertToSeconds(cleanData.to.formatted);
+
+    const minGreaterThanMax = from >= to;
+    const maxLowerThanMin = to <= from;
+
+    if (minGreaterThanMax) {
+      methods.setError(
+        'form',
+        'minGreaterThanMax',
+        `<b>From</b> cannot be greater than <b>To</b>.`
+      );
+    }
+
+    console.log('errors: ', methods.errors);
+
     chrome.storage.sync.set({ data: cleanData }, function () {
-      console.log(`value saved: ${data}`);
+      console.log(`Data succesfully saved: ${data}`);
     });
 
     // if (!data.fromHours) {
@@ -41,19 +83,18 @@ function TimePicker() {
     // console.log('form sent succesfully');
   };
 
-  useEffect(() => {
-    chrome.storage.sync.get(['data'], function (result) {
-      setData(result.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const handleErrors = () => {};
 
   return (
     <FormContext {...methods}>
-      <form className="time-filter" onSubmit={methods.handleSubmit(onSubmit)}>
+      <form
+        name="form"
+        className="time-filter"
+        onSubmit={methods.handleSubmit(onSubmit)}
+      >
+        <label htmlFor="">
+          <h3>From:</h3>
+        </label>
         <div className="time-filter-fieldset">
           <TimePickerItem
             name="fromHours"
@@ -61,7 +102,7 @@ function TimePicker() {
             control={methods.control}
             placeholder={'hours'}
             errors={methods.errors}
-            defaultValue={generateTimeOptions('hour')[0]}
+            customDefaultValue={context.formData.from.hours}
           ></TimePickerItem>
           <TimePickerItem
             name="fromMinutes"
@@ -69,7 +110,7 @@ function TimePicker() {
             control={methods.control}
             placeholder={'minutes'}
             errors={methods.errors}
-            defaultValue={generateTimeOptions('minute')[0]}
+            customDefaultValue={context.formData.from.minutes}
           ></TimePickerItem>
           <TimePickerItem
             name="fromSeconds"
@@ -77,47 +118,42 @@ function TimePicker() {
             control={methods.control}
             placeholder={'seconds'}
             errors={methods.errors}
-            defaultValue={generateTimeOptions('second')[0]}
+            customDefaultValue={context.formData.from.seconds}
           ></TimePickerItem>
-
-          {/* <TimePickerItem
-            name="fromMinutes"
-            options={generateTimeOptions('minute')}
-            control={methods.control}
-            placeholder={'minutes'}
-          ></TimePickerItem>
-
-          <TimePickerItem
-            name="fromSeconds"
-            options={generateTimeOptions('second')}
-            control={methods.control}
-            placeholder={'seconds'}
-          ></TimePickerItem> */}
         </div>
-        {/* <div className="time-filter-fieldset">
+        <label htmlFor="">
+          <h3>To:</h3>
+        </label>
+        <div className="time-filter-fieldset">
           <TimePickerItem
             name="toHours"
             options={generateTimeOptions('hour')}
             control={methods.control}
             placeholder={'hours'}
-            defaultValue={generateTimeOptions('hour')[0]}
+            errors={methods.errors}
+            customDefaultValue={context.formData.to.hours}
           ></TimePickerItem>
-
           <TimePickerItem
             name="toMinutes"
             options={generateTimeOptions('minute')}
             control={methods.control}
             placeholder={'minutes'}
+            errors={methods.errors}
+            customDefaultValue={context.formData.to.minutes}
           ></TimePickerItem>
-
           <TimePickerItem
             name="toSeconds"
             options={generateTimeOptions('second')}
             control={methods.control}
             placeholder={'seconds'}
+            errors={methods.errors}
+            customDefaultValue={context.formData.to.seconds}
           ></TimePickerItem>
-        </div> */}
-        <input type="submit" />
+        </div>
+        <input type="submit" value="Filter now!" />
+        <p>
+          {methods.errors.form && ReactHtmlParser(methods.errors.form.message)}
+        </p>
       </form>
     </FormContext>
   );

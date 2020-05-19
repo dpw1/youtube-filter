@@ -8,3 +8,13 @@ export const generateTimeOptions = (type = 'hour') => {
       };
     });
 };
+
+export const minTwoDigits = (n) => {
+  return (n < 10 ? '0' : '') + n;
+};
+
+export const convertToSeconds = (value) => {
+  const split = value.split(':').reverse();
+  let result = Number(split[0]) + Number(split[1] * 60);
+  return split.length > 2 ? (result += Number(split[2] * 3600)) : result;
+};

@@ -8,7 +8,7 @@ function TimePickerItem(props) {
     name,
     control,
     placeholder,
-    defaultValue,
+    customDefaultValue,
     onChange,
     errors,
     rules,
@@ -19,16 +19,11 @@ function TimePickerItem(props) {
       <div className="time-filter-item">
         <Controller
           style={{ border: `1px solid red` }}
-          as={
-            <Select
-              options={options}
-              defaultValue={defaultValue && defaultValue}
-            />
-          }
+          as={<Select options={options} />}
           rules={rules}
           control={control}
+          defaultValue={customDefaultValue}
           placeholder={placeholder}
-          defaultValue={defaultValue}
           onChange={([selected]) => {
             if (typeof onChange === 'function') {
               onChange(selected);
