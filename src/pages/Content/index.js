@@ -141,6 +141,25 @@ window.ytFilter = (function () {
     localStorage.setItem('scrolledDistance', 1);
   }
 
+  function removeEmptyShelfLists() {
+    const shelfListSelector = `ytd-shelf-renderer[class]`;
+    const shelfList = document.querySelector(shelfListSelector);
+
+    console.log(shelfList);
+    if (!shelfList) {
+      return;
+    }
+
+    const shelfLists = document.querySelectorAll(shelfListSelector);
+
+    for (var each of shelfLists) {
+      const hasChild = each.querySelector('ytd-video-renderer');
+      if (!hasChild) {
+        each.remove();
+      }
+    }
+  }
+
   async function hideVideos() {
     let processedJSON;
 
@@ -250,8 +269,10 @@ window.ytFilter = (function () {
 
       resetScrollLimitToHideVideos();
       hideVideos();
+
       window.onscroll = function (e) {
         hideVideosOnScroll(request.tab.openerTabId);
+        removeEmptyShelfLists();
       };
     }
   }
