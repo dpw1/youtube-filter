@@ -12,13 +12,12 @@ For instance, filtering by 1:00 and 3:00 will exclude videos below 1 minute and 
 
 - Real-time filtering
 - Loaded only at youtube search page to keep your browsing experience fast
-- Simple yet user friendly interface
-- Removed videos are subtly animated
+- Elegant and intuitive user interface
+- Remove videos on scroll
+- Automatically re-filters on page changes
 
 ## Todo
 
 - Allow only numbers on search input
-- Force re-filtering or page reload when user makes a new search
 - Allow list to be sorted (descending and ascending)
 - Button to easily turn extension on/off
-- Automatically filter by videos only

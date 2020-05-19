@@ -29,6 +29,8 @@ function TimePickerItem(props) {
               onChange(selected);
             }
 
+            console.log(selected);
+
             // console.log(errors);
 
             return selected;

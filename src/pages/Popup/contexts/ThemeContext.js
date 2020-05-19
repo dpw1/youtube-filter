@@ -4,7 +4,12 @@ export const ThemeContext = createContext();
 
 const ThemeProvider = (props) => {
   const [formData, setFormData] = useState();
-  const [options, setOptions] = useState();
+  const [options, setOptions] = useState({
+    filter: true,
+    filterOnScroll: true,
+    filterEverySeconds: 1,
+    removeEmptyVerticalLists: true,
+  });
 
   return (
     <div>

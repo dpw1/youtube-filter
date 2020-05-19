@@ -5,14 +5,19 @@ import {
   generateTimeOptions,
   minTwoDigits,
   convertToSeconds,
+  sleep,
 } from './utils/utils';
 import { ThemeContext } from '../contexts/ThemeContext';
 import ReactHtmlParser from 'react-html-parser';
+import { Button } from 'react-bulma-components';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TimePicker() {
   const methods = useForm();
   const context = useContext(ThemeContext);
-  // const watchAllFields = methods.watch();
+  const [buttonText, setButtonText] = useState('Filter now!');
+  const watchAllFields = methods.watch();
 
   // console.log('watchAllFields', watchAllFields);
   const onSubmit = (data) => {
@@ -46,12 +51,27 @@ function TimePicker() {
       return methods.setError(
         'form',
         'minGreaterThanMax',
-        `<b>From</b> cannot be greater than <b>To</b>.`
+        `Error: "From" cannot be greater than "To".`
       );
     }
 
-    chrome.storage.sync.set({ data: cleanData }, function () {
+    chrome.storage.sync.set({ data: cleanData }, async function () {
       console.log(`Data succesfully saved: ${data}`);
+
+      // const delay = 1000;
+
+      // toast.success(`Filtering!`, {
+      //   position: 'bottom-right',
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: false,
+      //   progress: undefined,
+      // });
+
+      // await sleep(delay);
+
       chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
         const tabId = tab[0].id;
 
@@ -62,30 +82,34 @@ function TimePicker() {
           },
         });
       });
+
       window.close();
     });
-
-    // if (!data.fromHours) {
-    //   methods.setError('fromHours', 'undefined', 'Please select hours.');
-    // }
-
-    // if (!data.fromMinutes) {
-    //   methods.setError('fromMinutes', 'undefined', 'Please select minutes.');
-    // }
-
-    // if (!data.fromSeconds) {
-    //   methods.setError('fromSeconds', 'undefined', 'Please select seconds.');
-    // }
-
-    // const errors = Object.values(data).some((e) => e === undefined);
-
-    // console.log(errors);
-    // if () {
-    //   return;
-    // }
-
-    // console.log('form sent succesfully');
   };
+
+  /** Watch inputs */
+  useEffect(
+    (e) => {
+      console.log('field changed!', watchAllFields);
+    },
+    [watchAllFields]
+  );
+
+  /** Watch errors */
+  useEffect(() => {
+    if (methods.errors.form) {
+      toast.error(`${methods.errors.form.message}`, {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+      });
+      methods.clearError();
+    }
+  }, [methods.errors]);
 
   const handleErrors = () => {};
 
@@ -97,7 +121,7 @@ function TimePicker() {
         onSubmit={methods.handleSubmit(onSubmit)}
       >
         <label htmlFor="">
-          <h3>From:</h3>
+          <h3 className="has-text-white">From:</h3>
         </label>
         <div className="time-filter-fieldset">
           <TimePickerItem
@@ -126,7 +150,7 @@ function TimePicker() {
           ></TimePickerItem>
         </div>
         <label htmlFor="">
-          <h3>To:</h3>
+          <h3 className="has-text-white">To:</h3>
         </label>
         <div className="time-filter-fieldset">
           <TimePickerItem
@@ -154,15 +178,27 @@ function TimePicker() {
             customDefaultValue={context.formData.to.seconds}
           ></TimePickerItem>
         </div>
-        <input
+
+        <Button
           className="time-filter-button"
           type="submit"
-          value="Filter now!"
-        />
-        <p>
-          {methods.errors.form && ReactHtmlParser(methods.errors.form.message)}
-        </p>
+          color="primary"
+          onClick={(e) => console.log(e)}
+        >
+          {buttonText}
+        </Button>
       </form>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+      />
     </FormContext>
   );
 }

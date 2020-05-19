@@ -6,6 +6,7 @@
 
 .time-filter-fieldset {
   display: flex;
+  font-size: 12px;
 }
 
 .time-filter-item {
