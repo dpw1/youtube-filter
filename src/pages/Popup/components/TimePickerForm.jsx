@@ -12,7 +12,9 @@ import ReactHtmlParser from 'react-html-parser';
 function TimePicker() {
   const methods = useForm();
   const context = useContext(ThemeContext);
+  // const watchAllFields = methods.watch();
 
+  // console.log('watchAllFields', watchAllFields);
   const onSubmit = (data) => {
     // TODO: move this to content/index.js
 
@@ -41,21 +43,21 @@ function TimePicker() {
 
     console.log('clean data: ', cleanData);
 
-    const from = convertToSeconds(cleanData.from.formatted);
-    const to = convertToSeconds(cleanData.to.formatted);
+    const min = convertToSeconds(cleanData.from.formatted);
+    const max = convertToSeconds(cleanData.to.formatted);
 
-    const minGreaterThanMax = from >= to;
-    const maxLowerThanMin = to <= from;
+    const minGreaterThanMax = min >= max;
+    const maxLowerThanMin = max <= min;
 
     if (minGreaterThanMax) {
-      methods.setError(
+      return methods.setError(
         'form',
         'minGreaterThanMax',
         `<b>From</b> cannot be greater than <b>To</b>.`
       );
     }
 
-    console.log('errors: ', methods.errors);
+    console.log(min, max, minGreaterThanMax);
 
     chrome.storage.sync.set({ data: cleanData }, function () {
       console.log(`Data succesfully saved: ${data}`);
