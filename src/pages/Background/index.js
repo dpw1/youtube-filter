@@ -1,9 +1,6 @@
 import '../../assets/img/icon-34.png';
 import '../../assets/img/icon-128.png';
 
-console.log('This is the background page.');
-console.log('Put the background scripts here.');
-
 window.onload = function () {
   /** Disables icon if page is not youtube */
   chrome.tabs.onActivated.addListener(function (activeInfo) {
@@ -33,6 +30,9 @@ window.onload = function () {
 
   chrome.runtime.onMessage.addListener((request, sender, resp) => {
     /** Takes care of reloading new page when video is selected */
-    chrome.tabs.reload(sender.tab.id);
+    console.log('request', request);
+    console.log('sender', sender);
+    console.log('resp', resp);
+    chrome.tabs.reload(request.tabIdToReload);
   });
 };

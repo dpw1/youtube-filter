@@ -223,6 +223,11 @@ window.ytFilter = (function () {
     const currentURL = request.tab.url;
     const previousURL = localStorage.getItem('previousURL');
 
+    console.log('** PAGE CHANGE **');
+
+    console.log(request.tab);
+    console.log('request opener:', request.tab.openerTabId);
+
     if (currentURL !== previousURL && _isSearchPage()) {
       localStorage.setItem('previousURL', currentURL);
 

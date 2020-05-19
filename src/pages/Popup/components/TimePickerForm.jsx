@@ -16,11 +16,7 @@ function TimePicker() {
 
   // console.log('watchAllFields', watchAllFields);
   const onSubmit = (data) => {
-    // TODO: move this to content/index.js
-
     methods.clearError();
-
-    console.log(data);
 
     const cleanData = {
       from: {
@@ -41,13 +37,10 @@ function TimePicker() {
       },
     };
 
-    console.log('clean data: ', cleanData);
-
     const min = convertToSeconds(cleanData.from.formatted);
     const max = convertToSeconds(cleanData.to.formatted);
 
     const minGreaterThanMax = min >= max;
-    const maxLowerThanMin = max <= min;
 
     if (minGreaterThanMax) {
       return methods.setError(
@@ -57,10 +50,17 @@ function TimePicker() {
       );
     }
 
-    console.log(min, max, minGreaterThanMax);
-
     chrome.storage.sync.set({ data: cleanData }, function () {
       console.log(`Data succesfully saved: ${data}`);
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { type: 'getText' }, function (
+          response
+        ) {
+          alert(response);
+          // $("#text").text(response);
+        });
+      });
+      // window.close();
     });
 
     // if (!data.fromHours) {
