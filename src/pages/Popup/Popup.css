@@ -6,11 +6,17 @@
 
 .time-filter-fieldset {
   display: flex;
-  /* flex-wrap: wrap-reverse; */
-  /* flex-direction: row; */
 }
 
 .time-filter-item {
   flex-grow: 1;
   max-width: 33%;
+}
+
+.time-filter-button {
+  margin-top: 20px;
+  min-height: 30px;
+  font-size: large;
+  padding: 5px;
+  cursor: pointer;
 }

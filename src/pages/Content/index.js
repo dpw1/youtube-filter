@@ -232,7 +232,14 @@ window.ytFilter = (function () {
       localStorage.setItem('previousURL', currentURL);
 
       if (request.tab.openerTabId) {
-        chrome.runtime.sendMessage({ tabIdToReload: request.tab.id });
+        // chrome.runtime.sendMessage({ tabIdToReload: request.tab.id });
+
+        chrome.runtime.sendMessage({
+          message: 'reload',
+          data: {
+            tabId: request.tab.id,
+          },
+        });
       } else if (!request.tab.openerTabId) {
         window.location.reload();
       }

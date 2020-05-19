@@ -52,15 +52,17 @@ function TimePicker() {
 
     chrome.storage.sync.set({ data: cleanData }, function () {
       console.log(`Data succesfully saved: ${data}`);
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { type: 'getText' }, function (
-          response
-        ) {
-          alert(response);
-          // $("#text").text(response);
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
+        const tabId = tab[0].id;
+
+        chrome.runtime.sendMessage({
+          message: 'reload',
+          data: {
+            tabId,
+          },
         });
       });
-      // window.close();
+      window.close();
     });
 
     // if (!data.fromHours) {
@@ -152,7 +154,11 @@ function TimePicker() {
             customDefaultValue={context.formData.to.seconds}
           ></TimePickerItem>
         </div>
-        <input type="submit" value="Filter now!" />
+        <input
+          className="time-filter-button"
+          type="submit"
+          value="Filter now!"
+        />
         <p>
           {methods.errors.form && ReactHtmlParser(methods.errors.form.message)}
         </p>

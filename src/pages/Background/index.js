@@ -30,9 +30,10 @@ window.onload = function () {
 
   chrome.runtime.onMessage.addListener((request, sender, resp) => {
     /** Takes care of reloading new page when video is selected */
-    console.log('request', request);
-    console.log('sender', sender);
-    console.log('resp', resp);
-    chrome.tabs.reload(request.tabIdToReload);
+    console.log('received message');
+
+    if (request.message === 'reload') {
+      chrome.tabs.reload(request.data.tabId);
+    }
   });
 };
