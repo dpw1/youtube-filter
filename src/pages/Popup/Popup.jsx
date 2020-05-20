@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from 'react';
-import logo from '../../assets/img/logo.svg';
-import Greetings from '../../containers/Greetings/Greetings';
-import './Bulma.css';
-import TimePickerForm from './components/TimePickerForm';
 
+import TimePickerForm from './components/TimePickerForm';
+import { ToastContainer, toast } from 'react-toastify';
 import { ThemeContext } from './contexts/ThemeContext';
+
+import './Bulma.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Popup = () => {
   const context = useContext(ThemeContext);
@@ -42,14 +43,25 @@ const Popup = () => {
   };
   useEffect(() => {
     chrome.storage.sync.get(['data'], function (result) {
-      console.log(result);
-
       if (result.data) {
         context.setFormData(result.data);
       } else if (!result.data) {
-        console.log('empty!');
         context.setFormData(defaultData);
       }
+    });
+
+    chrome.storage.sync.get(['options'], function (result) {
+      if (result.options) {
+        context.setOptions(result.data);
+      } else {
+        console.log('no options, trying to save');
+        const { options } = context;
+        chrome.storage.sync.set({ options }, async function () {
+          console.log('no options, setting default options');
+        });
+      }
+
+      console.log(result);
     });
   }, []);
 
@@ -62,6 +74,17 @@ const Popup = () => {
       ) : (
         <p>'Loading...'</p>
       )}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+      />
     </section>
   );
 };

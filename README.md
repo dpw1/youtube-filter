@@ -6,7 +6,7 @@
 
 Simple Chrome extension to filter videos by length.
 
-For instance, filtering by 1:00 and 3:00 will exclude videos below 1 minute and longer than 3 minutes.
+For instance, filtering by 1:00 and 3:00 will exclude videos shorter than 1 minute and longer than 3 minutes.
 
 ## Features
 
@@ -18,6 +18,7 @@ For instance, filtering by 1:00 and 3:00 will exclude videos below 1 minute and 
 
 ## Todo
 
+- Show video's length before it loads
 - Allow only numbers on search input
 - Allow list to be sorted (descending and ascending)
 - Button to easily turn extension on/off

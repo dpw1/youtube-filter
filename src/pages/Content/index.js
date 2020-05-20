@@ -136,12 +136,23 @@ window.ytFilter = (function () {
     });
   }
 
+  async function _getChromeStorageOptions() {
+    return new Promise(function (resolve, reject) {
+      chrome.storage.sync.get('options', function (result) {
+        resolve(result);
+      });
+    });
+  }
+
   async function resetScrollLimitToHideVideos() {
     // TODO: do math without relying on cookies
     localStorage.setItem('scrolledDistance', 1);
   }
 
   function removeEmptyShelfLists() {
+    /** During filtering, some divs may be empty after filtered.
+     * This function takes care of removing them.
+     */
     const shelfListSelector = `ytd-shelf-renderer[class]`;
     const shelfList = document.querySelector(shelfListSelector);
 
@@ -238,14 +249,19 @@ window.ytFilter = (function () {
     }
   }
 
-  async function handlePageChange(request, sender) {
+  async function handleFiltering(request, sender) {
+    const options = await _handleUserOptions();
+
+    const { filter } = options;
+
+    console.log('start ????????????????? ', filter);
+
+    if (!filter) {
+      return;
+    }
+
     const currentURL = request.tab.url;
     const previousURL = localStorage.getItem('previousURL');
-
-    console.log('** PAGE CHANGE **');
-
-    console.log(request.tab);
-    console.log('request opener:', request.tab.openerTabId);
 
     if (currentURL !== previousURL && _isSearchPage()) {
       localStorage.setItem('previousURL', currentURL);
@@ -277,11 +293,21 @@ window.ytFilter = (function () {
     }
   }
 
+  async function _handleUserOptions() {
+    /** Default options can be found at ThemeContext.js */
+
+    return new Promise(async function (resolve, reject) {
+      const { options } = await _getChromeStorageOptions();
+
+      resolve(options);
+    });
+  }
+
   return {
     init: function () {
       window.onload = function () {
         chrome.runtime.onMessage.addListener((request, sender) => {
-          setTimeout(handlePageChange(request, sender), 50);
+          setTimeout(handleFiltering(request, sender), 50);
         });
       };
     },

@@ -13,7 +13,9 @@ const ThemeProvider = (props) => {
 
   return (
     <div>
-      <ThemeContext.Provider value={{ formData, setFormData }}>
+      <ThemeContext.Provider
+        value={{ formData, setFormData, options, setOptions }}
+      >
         {props.children}
       </ThemeContext.Provider>
     </div>

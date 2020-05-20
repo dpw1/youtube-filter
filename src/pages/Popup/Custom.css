@@ -15,6 +15,10 @@
   padding: 3px;
 }
 
+.time-filter-fieldset .time-filter-item:last-of-type {
+  padding-right: 0;
+}
+
 .time-filter-button {
   margin-top: 20px;
   min-height: 30px;

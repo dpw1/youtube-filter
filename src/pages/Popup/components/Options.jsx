@@ -10,80 +10,18 @@ import {
 import { ThemeContext } from '../contexts/ThemeContext';
 import ReactHtmlParser from 'react-html-parser';
 import { Button } from 'react-bulma-components';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TimePicker() {
   const methods = useForm();
   const context = useContext(ThemeContext);
-  const [buttonText, setButtonText] = useState('Filter now!');
-  const watchAllFields = methods.watch();
 
   // console.log('watchAllFields', watchAllFields);
   const onSubmit = (data) => {
     methods.clearError();
 
-    const cleanData = {
-      from: {
-        hours: data.fromHours,
-        minutes: data.fromMinutes,
-        seconds: data.fromSeconds,
-        formatted: `${minTwoDigits(data.fromHours.value)}:${minTwoDigits(
-          data.fromMinutes.value
-        )}:${minTwoDigits(data.fromMinutes.value)}`,
-      },
-      to: {
-        hours: data.toHours,
-        minutes: data.toMinutes,
-        seconds: data.toSeconds,
-        formatted: `${minTwoDigits(data.toHours.value)}:${minTwoDigits(
-          data.toMinutes.value
-        )}:${minTwoDigits(data.toSeconds.value)}`,
-      },
-    };
-
-    const min = convertToSeconds(cleanData.from.formatted);
-    const max = convertToSeconds(cleanData.to.formatted);
-
-    const minGreaterThanMax = min >= max;
-
-    if (minGreaterThanMax) {
-      return methods.setError(
-        'form',
-        'minGreaterThanMax',
-        `Error: "From" cannot be greater than "To".`
-      );
-    }
-
-    chrome.storage.sync.set({ data: cleanData }, async function () {
-      console.log(`Data succesfully saved: ${data}`);
-
-      // const delay = 1000;
-
-      // toast.success(`Filtering!`, {
-      //   position: 'bottom-right',
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: false,
-      //   progress: undefined,
-      // });
-
-      // await sleep(delay);
-
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
-        const tabId = tab[0].id;
-
-        chrome.runtime.sendMessage({
-          message: 'reload',
-          data: {
-            tabId,
-          },
-        });
-      });
-
-      window.close();
-    });
+    console.log('data sent');
   };
 
   /** Watch inputs */
@@ -109,6 +47,8 @@ function TimePicker() {
       methods.clearError();
     }
   }, [methods.errors]);
+
+  const handleErrors = () => {};
 
   return (
     <FormContext {...methods}>
@@ -185,6 +125,17 @@ function TimePicker() {
           {buttonText}
         </Button>
       </form>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+      />
     </FormContext>
   );
 }
