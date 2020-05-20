@@ -19,7 +19,7 @@ function TimePickerItem(props) {
       <div className="time-filter-item">
         <Controller
           style={{ border: `1px solid red` }}
-          as={<Select options={options} />}
+          as={<Select options={options} classNamePrefix="time-filter-select" />}
           rules={rules}
           control={control}
           defaultValue={customDefaultValue}

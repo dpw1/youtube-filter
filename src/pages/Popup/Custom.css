@@ -12,6 +12,7 @@
 .time-filter-item {
   flex-grow: 1;
   max-width: 33%;
+  padding: 3px;
 }
 
 .time-filter-button {
@@ -20,4 +21,8 @@
   font-size: large;
   padding: 5px;
   cursor: pointer;
+}
+
+.time-filter-select__dropdown-indicator {
+  padding: 2px;
 }
