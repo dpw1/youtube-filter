@@ -76,7 +76,7 @@ const Popup = () => {
           <Settings></Settings>
           <TimePickerForm></TimePickerForm>
           <Tutorial></Tutorial>
-          {/* <Credits></Credits> */}
+          <Credits></Credits>
         </div>
       ) : (
         <p>'Loading...'</p>

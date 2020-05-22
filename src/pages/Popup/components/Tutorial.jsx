@@ -11,7 +11,6 @@ export default function Tutorial() {
         src="https://www.youtube.com/embed/R_13op9cZ08?autoplay=0&showinfo=0&controls=0"
         frameborder="0"
       ></iframe>
-      <video src=""></video>
     </div>
   );
 }
