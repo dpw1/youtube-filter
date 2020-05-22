@@ -1,0 +1,28 @@
+.time-filter {
+  &-fieldset {
+    display: flex;
+    font-size: 12px;
+  }
+
+  &-item {
+    flex-grow: 1;
+    max-width: 33%;
+    padding: 3px;
+    &:last-of-type {
+      padding-right: 0;
+    }
+  }
+
+  &-button {
+    margin-top: 20px;
+    min-height: 30px;
+    font-size: large;
+    padding: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  &-select__dropdown-indicator {
+    padding: 2px;
+  }
+}

@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 
 import Popup from './Popup';
 import './index.css';
-import './custom.css';
+import './custom.scss';
 
 import ThemeProvider from './contexts/ThemeContext';
 render(

@@ -1,18 +1,25 @@
 import '../../assets/img/icon-34.png';
 import '../../assets/img/icon-128.png';
 
+const handleExtensionEnabled = (tab) => {
+  console.log(tab.url);
+  if (!/(youtube\.com)/gim.test(tab.url)) {
+    chrome.browserAction.disable(tab.id);
+  }
+};
+
 window.onload = function () {
   /** Disables icon if page is not youtube */
   chrome.tabs.onActivated.addListener(function (activeInfo) {
     chrome.tabs.get(activeInfo.tabId, (tab) => {
-      if (!/youtube\.com/.test(tab.url)) {
-        chrome.browserAction.disable(tab.id);
-      }
+      handleExtensionEnabled(tab);
     });
   });
 
   /** Passes information of current page to Content */
   chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    handleExtensionEnabled(tab);
+
     if (changeInfo.status === 'complete') {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const currTab = tabs[0];
