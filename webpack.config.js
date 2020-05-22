@@ -50,8 +50,8 @@ var options = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        test: /\.s?[ac]ss$/i,
+        loader: 'style-loader!css-loader!sass-loader',
       },
       {
         test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
