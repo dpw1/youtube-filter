@@ -254,8 +254,6 @@ window.ytFilter = (function () {
 
     const { filter } = options;
 
-    console.log('start ????????????????? ', filter);
-
     if (!filter) {
       return;
     }
@@ -304,6 +302,7 @@ window.ytFilter = (function () {
   }
 
   return {
+    // TODO: check if enabled/disabled, do not filter videos if disabled
     init: function () {
       window.onload = function () {
         chrome.runtime.onMessage.addListener((request, sender) => {
