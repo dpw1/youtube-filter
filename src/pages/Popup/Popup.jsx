@@ -7,6 +7,7 @@ import { ThemeContext } from './contexts/ThemeContext';
 import './Bulma.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Settings from './components/Settings';
+import Credits from './components/Credits';
 
 const Popup = () => {
   const context = useContext(ThemeContext);
@@ -73,6 +74,7 @@ const Popup = () => {
         <div>
           <Settings></Settings>
           <TimePickerForm></TimePickerForm>
+          <Credits></Credits>
         </div>
       ) : (
         <p>'Loading...'</p>

@@ -35,10 +35,6 @@ export default function Settings() {
     });
   }, []);
 
-  useEffect(() => {
-    console.log('options changed', options);
-  }, [options]);
-
   return options ? (
     <div className="settings">
       <h2 className="title is-5 has-text-white settings-title">Settings:</h2>

@@ -156,7 +156,6 @@ window.ytFilter = (function () {
     const shelfListSelector = `ytd-shelf-renderer[class]`;
     const shelfList = document.querySelector(shelfListSelector);
 
-    console.log(shelfList);
     if (!shelfList) {
       return;
     }
@@ -177,13 +176,11 @@ window.ytFilter = (function () {
     try {
       processedJSON = await _getTimeStamps();
     } catch (err) {
-      console.log(`bug fetching, tried again: ${processedJSON}`);
+      console.log(`Error when fetching youtube videos...: ${processedJSON}`);
     }
 
     // TODO: get this data only once, not at every function call
     const { data } = await _getChromeStorageData();
-
-    console.log(data);
 
     const min = _convertToSeconds(
       `${data.from.hours.value}:${data.from.minutes.value}:${data.from.seconds.value}`
@@ -191,8 +188,6 @@ window.ytFilter = (function () {
     const max = _convertToSeconds(
       `${data.to.hours.value}:${data.to.minutes.value}:${data.to.seconds.value}`
     );
-
-    console.log('min', min);
 
     for (const [i, each] of processedJSON.entries()) {
       let time;
@@ -213,7 +208,7 @@ window.ytFilter = (function () {
         }
 
         /**
-         * Removes all hidden videos by video id
+         * Removes videos by youtube video id
          */
 
         if (!keepVideoOnTheList || !time) {
@@ -235,6 +230,8 @@ window.ytFilter = (function () {
         }
       }
     }
+
+    setTimeout(() => removeEmptyShelfLists(), 50);
   }
 
   async function hideVideosOnScroll(id) {
@@ -244,7 +241,6 @@ window.ytFilter = (function () {
       window.scrollY % updateEveryYPixelsScrolled >=
       updateEveryYPixelsScrolled / 2
     ) {
-      console.log('updating on scroll!');
       hideVideos();
     }
   }
@@ -279,14 +275,11 @@ window.ytFilter = (function () {
     }
 
     if (_isSearchPage()) {
-      console.log('** SEARCH PAGE LOADED **');
-
       resetScrollLimitToHideVideos();
       hideVideos();
 
       window.onscroll = function (e) {
         hideVideosOnScroll(request.tab.openerTabId);
-        removeEmptyShelfLists();
       };
     }
   }

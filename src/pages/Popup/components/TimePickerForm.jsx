@@ -88,11 +88,11 @@ function TimePicker() {
     }
   }, [methods.errors]);
 
+  /** Populate state with chrome storage */
   useEffect(() => {
     chrome.storage.sync.get(['options'], function (result) {
       const data = result.options;
 
-      console.log('result is: ', data);
       if (!data) {
         return setOptions({ filter: true });
       }
@@ -101,6 +101,7 @@ function TimePicker() {
     });
   }, []);
 
+  /** Listen for changes on chrome storage */
   chrome.storage.onChanged.addListener(function (changes, namespace) {
     for (var key in changes) {
       var storageChange = changes[key];
