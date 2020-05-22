@@ -1,7 +1,7 @@
 {
   "name": "chrome-extension-boilerplate-react",
-  "version": "2.5.0",
-  "description": "A chrome extension boilerplate built with React 16 and Webpack 4",
+  "version": "1.0.0",
+  "description": "Filter Youtube videos by length of time when searching.",
   "license": "MIT",
   "repository": {
     "type": "git",
