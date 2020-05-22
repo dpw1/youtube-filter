@@ -2,7 +2,6 @@ import '../../assets/img/icon-34.png';
 import '../../assets/img/icon-128.png';
 
 const handleExtensionEnabled = (tab) => {
-  console.log(tab.url);
   if (!/(youtube\.com)/gim.test(tab.url)) {
     chrome.browserAction.disable(tab.id);
   }
