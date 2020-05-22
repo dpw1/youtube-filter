@@ -37,7 +37,7 @@ export default function Settings() {
 
   return options ? (
     <div className="settings">
-      <h2 className="title is-5 has-text-white settings-title">Settings:</h2>
+      {/* <h2 className="title is-5 has-text-white settings-title">Settings:</h2> */}
       <div className="settings-form">
         <Toggle
           id="filter"
@@ -46,7 +46,7 @@ export default function Settings() {
           onChange={handleChange}
         />
         <label htmlFor="filter" className="settings-label has-text-white">
-          {options.filter ? 'Filter is working!' : 'Filter is off :('}
+          {options.filter ? 'Filter is active!' : 'Filter is off :('}
         </label>
       </div>
     </div>

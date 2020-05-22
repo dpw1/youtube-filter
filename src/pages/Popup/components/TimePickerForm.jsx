@@ -52,7 +52,7 @@ function TimePicker() {
       return methods.setError(
         'form',
         'minGreaterThanMax',
-        `Error: "From" cannot be greater than "To".`
+        `Error: "From" cannot be greater or equal than "To".`
       );
     }
 
