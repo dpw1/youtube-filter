@@ -6,7 +6,7 @@ import {
   minTwoDigits,
   convertToSeconds,
   sleep,
-} from './utils/utils';
+} from '../utils/utils';
 import { ThemeContext } from '../contexts/ThemeContext';
 import ReactHtmlParser from 'react-html-parser';
 import { Button } from 'react-bulma-components';

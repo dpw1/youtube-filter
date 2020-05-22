@@ -6,15 +6,17 @@ import {
   minTwoDigits,
   convertToSeconds,
   sleep,
-} from './utils/utils';
+} from '../utils/utils';
 import { ThemeContext } from '../contexts/ThemeContext';
 import ReactHtmlParser from 'react-html-parser';
 import { Button } from 'react-bulma-components';
 import { toast } from 'react-toastify';
+import './TimePickerForm.scss';
 
 function TimePicker() {
   const methods = useForm();
   const context = useContext(ThemeContext);
+  const [options, setOptions] = useState(false);
   const [buttonText, setButtonText] = useState('Filter now!');
   const watchAllFields = methods.watch();
 
@@ -55,22 +57,6 @@ function TimePicker() {
     }
 
     chrome.storage.sync.set({ data: cleanData }, async function () {
-      console.log(`Data succesfully saved: ${data}`);
-
-      // const delay = 1000;
-
-      // toast.success(`Filtering!`, {
-      //   position: 'bottom-right',
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: false,
-      //   progress: undefined,
-      // });
-
-      // await sleep(delay);
-
       chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
         const tabId = tab[0].id;
 
@@ -85,14 +71,6 @@ function TimePicker() {
       window.close();
     });
   };
-
-  /** Watch inputs */
-  useEffect(
-    (e) => {
-      console.log('field changed!', watchAllFields);
-    },
-    [watchAllFields]
-  );
 
   /** Watch errors */
   useEffect(() => {
@@ -110,82 +88,119 @@ function TimePicker() {
     }
   }, [methods.errors]);
 
-  return (
-    <FormContext {...methods}>
-      <form
-        name="form"
-        className="time-filter"
-        onSubmit={methods.handleSubmit(onSubmit)}
-      >
-        <label htmlFor="">
-          <h3 className="has-text-white">From:</h3>
-        </label>
-        <div className="time-filter-fieldset">
-          <TimePickerItem
-            name="fromHours"
-            options={generateTimeOptions('hour')}
-            control={methods.control}
-            placeholder={'hours'}
-            errors={methods.errors}
-            customDefaultValue={context.formData.from.hours}
-          ></TimePickerItem>
-          <TimePickerItem
-            name="fromMinutes"
-            options={generateTimeOptions('minute')}
-            control={methods.control}
-            placeholder={'minutes'}
-            errors={methods.errors}
-            customDefaultValue={context.formData.from.minutes}
-          ></TimePickerItem>
-          <TimePickerItem
-            name="fromSeconds"
-            options={generateTimeOptions('second')}
-            control={methods.control}
-            placeholder={'seconds'}
-            errors={methods.errors}
-            customDefaultValue={context.formData.from.seconds}
-          ></TimePickerItem>
-        </div>
-        <label htmlFor="">
-          <h3 className="has-text-white">To:</h3>
-        </label>
-        <div className="time-filter-fieldset">
-          <TimePickerItem
-            name="toHours"
-            options={generateTimeOptions('hour')}
-            control={methods.control}
-            placeholder={'hours'}
-            errors={methods.errors}
-            customDefaultValue={context.formData.to.hours}
-          ></TimePickerItem>
-          <TimePickerItem
-            name="toMinutes"
-            options={generateTimeOptions('minute')}
-            control={methods.control}
-            placeholder={'minutes'}
-            errors={methods.errors}
-            customDefaultValue={context.formData.to.minutes}
-          ></TimePickerItem>
-          <TimePickerItem
-            name="toSeconds"
-            options={generateTimeOptions('second')}
-            control={methods.control}
-            placeholder={'seconds'}
-            errors={methods.errors}
-            customDefaultValue={context.formData.to.seconds}
-          ></TimePickerItem>
-        </div>
+  useEffect(() => {
+    chrome.storage.sync.get(['options'], function (result) {
+      const data = result.options;
 
-        <Button
-          className="time-filter-button"
-          type="submit"
-          color="primary"
-          onClick={(e) => console.log(e)}
+      console.log('result is: ', data);
+      if (!data) {
+        return setOptions({ filter: true });
+      }
+
+      setOptions(data);
+    });
+  }, []);
+
+  chrome.storage.onChanged.addListener(function (changes, namespace) {
+    for (var key in changes) {
+      var storageChange = changes[key];
+
+      console.log(key);
+      if (key === 'options') {
+        setOptions(storageChange.newValue);
+      }
+    }
+  });
+
+  return Object.keys(options).length >= 1 ? (
+    <div className="time-filter">
+      <h2 className="title is-5 has-text-white time-filter-title">
+        Show only videos between:
+      </h2>
+      <FormContext {...methods}>
+        <form
+          name="form"
+          className="time-filter-form"
+          onSubmit={methods.handleSubmit(onSubmit)}
         >
-          {buttonText}
-        </Button>
-      </form>
-    </FormContext>
+          <label htmlFor="">
+            <h3 className="has-text-white">From:</h3>
+          </label>
+          <div className="time-filter-fieldset">
+            <TimePickerItem
+              name="fromHours"
+              options={generateTimeOptions('hour')}
+              control={methods.control}
+              placeholder={'hours'}
+              errors={methods.errors}
+              disabled={!options.filter}
+              customDefaultValue={context.formData.from.hours}
+            ></TimePickerItem>
+            <TimePickerItem
+              name="fromMinutes"
+              options={generateTimeOptions('minute')}
+              control={methods.control}
+              placeholder={'minutes'}
+              errors={methods.errors}
+              disabled={!options.filter}
+              customDefaultValue={context.formData.from.minutes}
+            ></TimePickerItem>
+            <TimePickerItem
+              name="fromSeconds"
+              options={generateTimeOptions('second')}
+              control={methods.control}
+              placeholder={'seconds'}
+              errors={methods.errors}
+              disabled={!options.filter}
+              customDefaultValue={context.formData.from.seconds}
+            ></TimePickerItem>
+          </div>
+          <label htmlFor="">
+            <h3 className="has-text-white">To:</h3>
+          </label>
+          <div className="time-filter-fieldset">
+            <TimePickerItem
+              name="toHours"
+              options={generateTimeOptions('hour')}
+              control={methods.control}
+              placeholder={'hours'}
+              errors={methods.errors}
+              disabled={!options.filter}
+              customDefaultValue={context.formData.to.hours}
+            ></TimePickerItem>
+            <TimePickerItem
+              name="toMinutes"
+              options={generateTimeOptions('minute')}
+              control={methods.control}
+              placeholder={'minutes'}
+              errors={methods.errors}
+              disabled={!options.filter}
+              customDefaultValue={context.formData.to.minutes}
+            ></TimePickerItem>
+            <TimePickerItem
+              name="toSeconds"
+              options={generateTimeOptions('second')}
+              control={methods.control}
+              placeholder={'seconds'}
+              errors={methods.errors}
+              disabled={!options.filter}
+              customDefaultValue={context.formData.to.seconds}
+            ></TimePickerItem>
+          </div>
+
+          <Button
+            className="time-filter-button"
+            type="submit"
+            color="primary"
+            disabled={!options.filter}
+          >
+            {buttonText}
+          </Button>
+        </form>
+      </FormContext>
+    </div>
+  ) : (
+    <p className="has-text-white">Loading...</p>
   );
 }
 

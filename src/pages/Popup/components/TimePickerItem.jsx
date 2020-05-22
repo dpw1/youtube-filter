@@ -13,13 +13,20 @@ function TimePickerItem(props) {
     errors,
     rules,
     clearError,
+    disabled,
   } = props;
   return (
     <React.Fragment>
       <div className="time-filter-item">
         <Controller
           style={{ border: `1px solid red` }}
-          as={<Select options={options} classNamePrefix="time-filter-select" />}
+          as={
+            <Select
+              options={options}
+              classNamePrefix="time-filter-select"
+              isDisabled={disabled}
+            />
+          }
           rules={rules}
           control={control}
           defaultValue={customDefaultValue}
@@ -28,10 +35,6 @@ function TimePickerItem(props) {
             if (typeof onChange === 'function') {
               onChange(selected);
             }
-
-            console.log(selected);
-
-            // console.log(errors);
 
             return selected;
           }}

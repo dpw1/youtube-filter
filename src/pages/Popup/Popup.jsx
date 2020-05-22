@@ -6,6 +6,7 @@ import { ThemeContext } from './contexts/ThemeContext';
 
 import './Bulma.css';
 import 'react-toastify/dist/ReactToastify.css';
+import Settings from './components/Settings';
 
 const Popup = () => {
   const context = useContext(ThemeContext);
@@ -68,9 +69,11 @@ const Popup = () => {
   console.log(context);
   return (
     <section className="App">
-      <h2 className="title is-5 has-text-white	">Show only videos between:</h2>
       {context.formData ? (
-        <TimePickerForm></TimePickerForm>
+        <div>
+          <Settings></Settings>
+          <TimePickerForm></TimePickerForm>
+        </div>
       ) : (
         <p>'Loading...'</p>
       )}

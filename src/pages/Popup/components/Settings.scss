@@ -1,0 +1,17 @@
+.settings {
+  margin-bottom: 20px;
+  &-title {
+    // margin-bottom: 30px !important;
+  }
+  &-form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  &-toggle {
+    margin-right: 10px;
+  }
+  &-label {
+    cursor: pointer;
+  }
+}

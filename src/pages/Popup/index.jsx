@@ -2,8 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 
 import Popup from './Popup';
-import './index.css';
-import './custom.scss';
+import './index.scss';
 
 import ThemeProvider from './contexts/ThemeContext';
 render(
